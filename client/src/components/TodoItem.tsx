@@ -14,7 +14,7 @@ interface TodoItemProps {
 const TodoItem: React.FC<TodoItemProps> = ({ todo, markAsCompleted, deleteTodo }) => {
     return (
         <>
-            <div className='w-full relative flex shadow-xl rounded-xl flex-row justify-between py-[30px] px-2 items-center'>
+            <div className='w-full bg-white relative flex shadow-xl rounded-xl flex-row justify-between py-[30px] px-2 items-center'>
                 <div className='flex flex-row justify-start gap-2 items-center'>
                     <div className='flex flex-col'>
                         {!todo.isCompleted ? (

@@ -13,7 +13,7 @@ interface TodoListProps {
 const TodoList: React.FC<TodoListProps> = ({ todos, markAsCompleted, deleteTodo }) => {
     return (
         <>
-            <div className='flex flex-col justify-center items-center w-full'>
+            <div className='flex flex-col justify-center gap-2 items-center w-full'>
                 {todos?.map((todo, index) => (
                     <TodoItem todo={todo} markAsCompleted={markAsCompleted} deleteTodo={deleteTodo} key={index} />
                 ))}
