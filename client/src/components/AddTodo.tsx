@@ -1,18 +1,17 @@
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalOverlay, Textarea, useToast } from '@chakra-ui/react';
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { BsSaveFill } from "react-icons/bs";
 
 interface AddTodoProps {
-    handleAddTodo: (data: string) => void
+    handleAddTodo: (data: string) => void;
 }
 
 const AddTodo: React.FC<AddTodoProps> = ({ handleAddTodo }) => {
     const [open, setOpen] = React.useState(false);
+    const [isSaving, setIsSaving] = React.useState<boolean>(false);
+    const [value, setValue] = React.useState('');
+
+    const toast = useToast();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -20,54 +19,93 @@ const AddTodo: React.FC<AddTodoProps> = ({ handleAddTodo }) => {
 
     const handleClose = () => {
         setOpen(false);
+        setValue('');
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => setValue(event.target.value);
+
+    const saveTodo = () => {
+        if (value.length >= 1 && value.length <= 80) {
+            setIsSaving(true);
+
+            setTimeout(() => {
+                handleAddTodo(value);
+                setIsSaving(false);
+
+                toast({
+                    title: "Todo saved.",
+                    description: "Your todo has been successfully saved.",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                handleClose();
+            }, 2000);
+        } else if (value.length === 0) {
+            toast({
+                title: "Input required.",
+                description: "Please enter a todo item.",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+            });
+        } else {
+            toast({
+                title: "Too much text!",
+                description: "Max 80 characters allowed per todo.",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
     };
 
     return (
         <>
-            <div className='w-full flex flex-col justify-center items-end'>
-                <Button sx={{ marginTop: "20px", marginBottom: "20px" }} color='success' variant="contained" onClick={handleClickOpen}>
-                    Add Todo
-                </Button>
-            </div>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const data = formJson.data;
-                        handleAddTodo(data)
-                        handleClose();
-                    },
-                }}
+            <Button
+                onClick={handleClickOpen}
+                colorScheme='blue'
+                color="white"
+                size="lg"
+                variant="solid"
+                borderRadius="full"
+                position="absolute"
+                right={15}
+                bottom={15}
             >
-                <DialogTitle>Add Todo</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Add todo content in the field below.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        required
-                        margin="dense"
-                        id="name"
-                        name="data"
-                        label="Enter Todo"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Save</Button>
-                </DialogActions>
-            </Dialog>
+                +
+            </Button>
+            <Modal
+                isCentered
+                onClose={handleClose}
+                isOpen={open}
+                motionPreset='slideInBottom'
+            >
+                <ModalOverlay />
+                <ModalContent maxWidth={{ base: "90%", sm: "80%", md: "40%" }}>
+                    <ModalBody marginTop={5}>
+                        <Textarea
+                            value={value}
+                            onChange={handleChange}
+                            placeholder='Enter todo'
+                            size='md'
+                            resize='none'
+                            overflow='hidden'
+                            style={{ height: 'auto' }}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button variant='ghost' mr={3} onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button rightIcon={<BsSaveFill />} onClick={saveTodo} isLoading={isSaving} loadingText="Saving" colorScheme='blue'>
+                            Save
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </>
     );
 }
 
-export default AddTodo
+export default AddTodo;
