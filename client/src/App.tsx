@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Todo } from './types';
 import axios from 'axios';
-import { useToast } from '@chakra-ui/react';
+import { Alert, AlertIcon, useToast } from '@chakra-ui/react';
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import AddTodo from './components/AddTodo';
 import EmptyAnimation from "./assets/empty-anim.json"
@@ -85,12 +85,17 @@ function App() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col p-5 justify-start items-center">
+    <div className="w-full min-h-screen gap-5 flex flex-col p-5 justify-start items-center">
       <h1 className="text-2xl text-[#1d63a5]">MeTodox</h1>
+
+      {numOfTodos > 0 && (<Alert status='info'>
+        <AlertIcon />
+        To mark todos as completed, you can either drag a todo from its block to the completed block, or simply select the checkbox!
+      </Alert>)}
 
       {numOfTodos > 0 && (
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          <div className="flex w-full flex-col gap-5 mt-10 md:flex-row justify-center items-center">
+          <div className="flex w-full flex-col gap-5 mt-5 md:flex-row justify-center items-center">
             <Droppable droppableId="newTodos">
               {(provided) => (
                 <div
