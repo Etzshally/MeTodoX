@@ -69,7 +69,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ handleAddTodo }) => {
                 size="lg"
                 variant="solid"
                 borderRadius="full"
-                position="absolute"
+                position="fixed"
                 right={15}
                 bottom={15}
             >

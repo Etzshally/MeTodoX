@@ -6,15 +6,21 @@ import { Badge } from '@chakra-ui/react';
 import { formatTimeSince } from '../helpers';
 
 interface TodoItemProps {
-    todo: Todo,
-    markAsCompleted: (id: number) => void;
-    deleteTodo: (id: number) => void;
+    todo: Todo;
+    markAsCompleted: (id: string) => void;
+    deleteTodo: (id: string) => void;
+    provided?: any
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, markAsCompleted, deleteTodo }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ provided, todo, markAsCompleted, deleteTodo }) => {
     return (
         <>
-            <div className='w-full bg-white relative flex shadow-xl rounded-xl flex-row justify-between py-[30px] px-2 items-center'>
+            <div
+                ref={provided ? provided.innerRef : null}
+                {...(provided ? provided.draggableProps : {})}
+                {...(provided ? provided.dragHandleProps : {})}
+                className='w-full bg-white relative flex shadow-xl rounded-xl mt-1 mb-1 flex-row justify-between py-[30px] px-2 items-center'
+            >
                 <div className='flex flex-row justify-start gap-2 items-center'>
                     <div className='flex flex-col'>
                         {!todo.isCompleted ? (
